@@ -42,8 +42,8 @@ export const HomeTab: React.FC = () => {
     <>
       <Card title="Welcome">
         <p>
-          This is a simple React template for Venus-enabled projects. It includes theming, tab
-          navigation, appStorage, and ad integration out of the box.
+          This is a Rundot-enabled React project. It includes theming, tab navigation, appStorage,
+          and ad integration out of the box.
         </p>
       </Card>
 

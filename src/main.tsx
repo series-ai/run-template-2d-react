@@ -7,7 +7,7 @@ import { theme, applyTheme } from './theme';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error('[Template React Simple] Root element not found');
+  throw new Error('[run-template-2d-react] Root element not found');
 }
 
 const root = createRoot(rootElement);

@@ -1,7 +1,7 @@
 {
-  "name": "_template_react_simple",
+  "name": "run-template-2d-react",
   "version": "1.0.0",
-  "description": "Simple React + Vite + TypeScript template with RundotGameAPI integration",
+  "description": "React + Vite + TypeScript app with RundotGameAPI integration",
   "type": "module",
   "scripts": {
     "dev": "vite",
