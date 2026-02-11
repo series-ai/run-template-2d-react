@@ -20,7 +20,7 @@
     "RUN.game"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.2.0",
-    "firebase": "^11.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
