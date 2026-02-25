@@ -6,6 +6,7 @@ import { Button } from '../components/Button';
 
 export const HomeTab: React.FC = () => {
   const [counter, setCounter] = useState<number>(0);
+  const [assetUrl, setAssetUrl] = useState<string | null>(null);
   const hasLoadedRef = useRef(false);
 
   // Load saved counter on mount (once only, even in StrictMode)
@@ -25,6 +26,25 @@ export const HomeTab: React.FC = () => {
     };
 
     loadCounter();
+  }, []);
+
+  // Fetch CDN asset on mount
+  useEffect(() => {
+    let url: string | undefined;
+
+    RundotGameAPI.cdn
+      .fetchAsset('circle.png')
+      .then((blob) => {
+        url = URL.createObjectURL(blob);
+        setAssetUrl(url);
+      })
+      .catch((err) => {
+        RundotGameAPI.error('[HomeTab] Error fetching CDN asset:', err);
+      });
+
+    return () => {
+      if (url) URL.revokeObjectURL(url);
+    };
   }, []);
 
   // Auto-save whenever counter changes (skip the initial load)
@@ -47,10 +67,20 @@ export const HomeTab: React.FC = () => {
         </p>
       </Card>
 
-      <Card
-        title="Counter with Storage"
-        description="Demonstrates state management, haptic feedback, and persistent storage via RundotGameAPI"
-      >
+      <Card title="Tap the Circle">
+        {assetUrl && (
+          <div
+            style={{ display: 'flex', justifyContent: 'center', padding: '16px 0', cursor: 'pointer' }}
+            onClick={() => updateCounter(1)}
+          >
+            <img
+              src={assetUrl}
+              alt="Tap to increment"
+              style={{ width: 96, height: 96, borderRadius: '50%', userSelect: 'none' }}
+              draggable={false}
+            />
+          </div>
+        )}
         <div className="counter-display">{counter}</div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
           <Button variant="primary" onClick={() => updateCounter(-1)}>
