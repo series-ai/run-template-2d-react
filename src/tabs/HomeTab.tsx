@@ -8,6 +8,8 @@ export const HomeTab: React.FC = () => {
   const [counter, setCounter] = useState<number>(0);
   const [assetUrl, setAssetUrl] = useState<string | null>(null);
   const hasLoadedRef = useRef(false);
+  const hasInteractedRef = useRef(false);
+  const counterRef = useRef(0);
 
   // Load saved counter on mount (once only, even in StrictMode)
   useEffect(() => {
@@ -18,7 +20,9 @@ export const HomeTab: React.FC = () => {
       try {
         const saved = await RundotGameAPI.appStorage.getItem('counter');
         if (saved !== null) {
-          setCounter(parseInt(saved, 10));
+          const parsed = parseInt(saved, 10);
+          counterRef.current = parsed;
+          setCounter(parsed);
         }
       } catch (error) {
         RundotGameAPI.error('[HomeTab] Error loading counter:', error);
@@ -54,8 +58,22 @@ export const HomeTab: React.FC = () => {
   }, [counter]);
 
   const updateCounter = async (delta: number) => {
+    if (!hasInteractedRef.current) {
+      hasInteractedRef.current = true;
+      RundotGameAPI.analytics.recordCustomEvent('home_interacted', { delta });
+      RundotGameAPI.analytics.trackFunnelStep(2, 'home_interacted', 'session', 1);
+    }
+
+    const next = counterRef.current + delta;
+    counterRef.current = next;
+    if (delta > 0) {
+      RundotGameAPI.analytics.recordCustomEvent('counter_incremented', { value: next });
+    } else if (delta < 0) {
+      RundotGameAPI.analytics.recordCustomEvent('counter_decremented', { value: next });
+    }
+
     await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Light);
-    setCounter((prev) => prev + delta);
+    setCounter(next);
   };
 
   return (
