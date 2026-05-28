@@ -25,14 +25,14 @@ const getFontScale = (): number => {
   }
 };
 
+// px-only by design: theme.text sizes are all `${n}px` strings, and
+// Math.round below would corrupt fractional rem/em (1.5rem * 1.2 → 2rem).
 const scaleSize = (size: string, fontScale: number): string => {
   if (fontScale === 1) return size;
-  const match = /^(-?\d+(?:\.\d+)?)(px|rem|em)$/.exec(size.trim());
+  const match = /^(-?\d+(?:\.\d+)?)px$/.exec(size.trim());
   if (!match) return size;
   const value = parseFloat(match[1] ?? '0');
-  const unit = match[2] ?? 'px';
-  const scaled = Math.round(value * fontScale);
-  return `${scaled}${unit}`;
+  return `${Math.round(value * fontScale)}px`;
 };
 
 const semanticVarsBlock = (
