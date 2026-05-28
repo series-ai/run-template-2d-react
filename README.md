@@ -40,3 +40,5 @@ src/
 ### Typography
 
 Prefer the semantic text roles in `theme.text` (`display`, `displaySm`, `h1`, `h2`, `h3`, `bodyLg`, `body`, `bodySm`, `label`, `caption`, `numeric`) as the default API for text. Each role is wired to CSS variables (`--text-<role>`, `--text-<role>-lh`, `--text-<role>-weight`) and utility classes (`.text-h1`, `.text-body-sm`, etc.). The active scale is chosen by device class (`mobile` / `desktop` / `tv`) via `applyDeviceClass()` in `main.tsx`. The legacy `theme.fontSize` scale (`xs..xxl`) is still available as an escape hatch — prefer the semantic roles for any new code.
+
+> **Native element restyling.** Native `<h1>`, `<h2>`, `<h3>`, and `<p>` elements pick up the semantic role sizes via element selectors in `style.css` so existing markup just works. If you want one of those elements without the token size — for example a `<p>` that should render at caption size — apply a utility class on a non-semantic element instead (e.g. `<div className="text-caption">`) or override locally with another `text-*` utility.

@@ -1,3 +1,4 @@
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api';
 import type { Theme } from './types';
 import type { DeviceClass } from './deviceClass';
 
@@ -11,21 +12,49 @@ interface RoleValues {
   readonly weight: number;
 }
 
-const semanticVarsBlock = (roles: Readonly<Record<string, RoleValues>>): string => {
+// The Rundot host caps the iframe and disables browser pinch-zoom + OS font
+// scale via `user-scalable=no` in index.html, so the SDK surfaces user-set
+// font scaling as `device.fontScale` instead. Apply it at the emit point so
+// every semantic role honors it uniformly.
+const getFontScale = (): number => {
+  try {
+    const fs = RundotGameAPI.system.getDevice().fontScale;
+    return typeof fs === 'number' && fs > 0 ? fs : 1;
+  } catch {
+    return 1;
+  }
+};
+
+const scaleSize = (size: string, fontScale: number): string => {
+  if (fontScale === 1) return size;
+  const match = /^(-?\d+(?:\.\d+)?)(px|rem|em)$/.exec(size.trim());
+  if (!match) return size;
+  const value = parseFloat(match[1] ?? '0');
+  const unit = match[2] ?? 'px';
+  const scaled = Math.round(value * fontScale);
+  return `${scaled}${unit}`;
+};
+
+const semanticVarsBlock = (
+  roles: Readonly<Record<string, RoleValues>>,
+  fontScale: number,
+): string => {
   return Object.entries(roles)
     .map(([role, values]) => {
       const k = kebab(role);
-      return `    --text-${k}: ${values.size};\n    --text-${k}-lh: ${values.lineHeight};\n    --text-${k}-weight: ${values.weight};`;
+      const size = scaleSize(values.size, fontScale);
+      return `    --text-${k}: ${size};\n    --text-${k}-lh: ${values.lineHeight};\n    --text-${k}-weight: ${values.weight};`;
     })
     .join('\n');
 };
 
 const buildSemanticStylesheet = (text: Theme['text']): string => {
+  const fontScale = getFontScale();
   const classes: DeviceClass[] = ['mobile', 'desktop', 'tv'];
   return classes
     .map((cls) => {
       const selector = cls === 'mobile' ? ':root' : `:root[data-device="${cls}"]`;
-      return `${selector} {\n${semanticVarsBlock(text[cls])}\n  }`;
+      return `${selector} {\n${semanticVarsBlock(text[cls], fontScale)}\n  }`;
     })
     .join('\n');
 };
