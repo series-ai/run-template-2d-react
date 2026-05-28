@@ -20,6 +20,19 @@ const render = (node: ReactNode) => {
 applyTheme(theme);
 applyDeviceClass();
 
+// SDK auto-initializes on import but completion is async. getDevice()
+// throws pre-init, so the sync applyTheme above silently falls back to
+// fontScale=1 and the viewport-based deviceClass heuristic. Re-apply
+// once init resolves to pick up the real fontScale and deviceType.
+RundotGameAPI.initializeAsync()
+  .then(() => {
+    applyTheme(theme);
+    applyDeviceClass();
+  })
+  .catch(() => {
+    // Init failed; boot-time fallback values stand.
+  });
+
 RundotGameAPI.lifecycles.onPause(() => {
   RundotGameAPI.analytics.recordCustomEvent('game_paused');
 });
