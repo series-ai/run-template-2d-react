@@ -1,4 +1,34 @@
 import type { Theme } from './types';
+import type { DeviceClass } from './deviceClass';
+
+const SEMANTIC_VARS_STYLE_ID = 'rundot-semantic-text-vars';
+
+const kebab = (role: string): string => role.replace(/([A-Z])/g, '-$1').toLowerCase();
+
+interface RoleValues {
+  readonly size: string;
+  readonly lineHeight: string;
+  readonly weight: number;
+}
+
+const semanticVarsBlock = (roles: Readonly<Record<string, RoleValues>>): string => {
+  return Object.entries(roles)
+    .map(([role, values]) => {
+      const k = kebab(role);
+      return `    --text-${k}: ${values.size};\n    --text-${k}-lh: ${values.lineHeight};\n    --text-${k}-weight: ${values.weight};`;
+    })
+    .join('\n');
+};
+
+const buildSemanticStylesheet = (text: Theme['text']): string => {
+  const classes: DeviceClass[] = ['mobile', 'desktop', 'tv'];
+  return classes
+    .map((cls) => {
+      const selector = cls === 'mobile' ? ':root' : `:root[data-device="${cls}"]`;
+      return `${selector} {\n${semanticVarsBlock(text[cls])}\n  }`;
+    })
+    .join('\n');
+};
 
 /**
  * Apply theme values to CSS variables
@@ -50,4 +80,15 @@ export const applyTheme = (theme: Theme): void => {
   root.style.setProperty('--animation-fast', `${theme.animation.fast}ms`);
   root.style.setProperty('--animation-normal', `${theme.animation.normal}ms`);
   root.style.setProperty('--animation-slow', `${theme.animation.slow}ms`);
+
+  // Apply semantic text variables (mobile/desktop/tv) via an injected style tag
+  // so the device-class overrides come from a single source of truth.
+  const css = buildSemanticStylesheet(theme.text);
+  let styleTag = document.getElementById(SEMANTIC_VARS_STYLE_ID) as HTMLStyleElement | null;
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = SEMANTIC_VARS_STYLE_ID;
+    document.head.appendChild(styleTag);
+  }
+  styleTag.textContent = css;
 };

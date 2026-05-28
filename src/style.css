@@ -169,6 +169,102 @@ body {
   }
 }
 
+/* Semantic typography — native element defaults */
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+}
+
+p {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+}
+
+/* Semantic typography — utility classes */
+.text-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+  font-weight: var(--text-display-weight);
+}
+
+.text-display-sm {
+  font-size: var(--text-display-sm);
+  line-height: var(--text-display-sm-lh);
+  font-weight: var(--text-display-sm-weight);
+}
+
+.text-h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+}
+
+.text-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+}
+
+.text-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+}
+
+.text-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: var(--text-body-lg-lh);
+  font-weight: var(--text-body-lg-weight);
+}
+
+.text-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+}
+
+.text-body-sm {
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm-lh);
+  font-weight: var(--text-body-sm-weight);
+}
+
+.text-label {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--text-label-weight);
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--text-caption-weight);
+}
+
+.text-numeric {
+  font-size: var(--text-numeric);
+  line-height: var(--text-numeric-lh);
+  font-weight: var(--text-numeric-weight);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
+}
+
 /* Cards */
 .card {
   background: rgba(255, 255, 255, 0.05);
@@ -179,13 +275,13 @@ body {
 }
 
 .card h2 {
-  font-size: var(--font-lg);
+  font-size: var(--text-h2);
   margin-bottom: var(--spacing-sm);
   color: var(--color-primary);
 }
 
 .card p {
-  font-size: var(--font-sm);
+  font-size: var(--text-body-sm);
   line-height: 1.6;
   color: var(--color-text-muted);
   margin-bottom: var(--spacing-sm);
@@ -195,7 +291,7 @@ body {
 button {
   border: none;
   border-radius: var(--radius-sm);
-  font-size: var(--font-md);
+  font-size: var(--text-label);
   font-weight: var(--font-semibold);
   padding: 12px 24px;
   cursor: pointer;
@@ -231,13 +327,18 @@ button:disabled {
 .btn-large {
   width: 100%;
   padding: 16px;
-  font-size: var(--font-lg);
+  font-size: var(--text-h3);
 }
 
 /* Counter display */
 .counter-display {
-  font-size: var(--font-xxl);
-  font-weight: var(--font-bold);
+  font-size: var(--text-numeric);
+  line-height: var(--text-numeric-lh);
+  font-weight: var(--text-numeric-weight);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
   text-align: center;
   margin: var(--spacing-lg) 0;
   color: var(--color-primary);
@@ -252,12 +353,12 @@ button:disabled {
 }
 
 .info-label {
-  font-size: var(--font-sm);
+  font-size: var(--text-caption);
   color: var(--color-text-muted);
 }
 
 .info-value {
-  font-size: var(--font-sm);
+  font-size: var(--text-body-sm);
   font-weight: var(--font-medium);
 }
 
@@ -300,7 +401,7 @@ button:disabled {
 }
 
 .tab-label {
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: var(--font-medium);
 }
 
@@ -323,12 +424,12 @@ button:disabled {
 }
 
 .error-title {
-  font-size: var(--font-xl);
+  font-size: var(--text-h1);
   margin-bottom: var(--spacing-xs);
 }
 
 .error-message {
-  font-size: var(--font-md);
+  font-size: var(--text-body);
   color: var(--color-text-muted);
   margin-bottom: var(--spacing-md);
   max-width: 420px;

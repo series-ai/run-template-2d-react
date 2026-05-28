@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import RundotGameAPI from '@series-inc/rundot-game-sdk/api';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { theme, applyTheme } from './theme';
+import { theme, applyTheme, applyDeviceClass } from './theme';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -18,6 +18,7 @@ const render = (node: ReactNode) => {
 };
 
 applyTheme(theme);
+applyDeviceClass();
 
 RundotGameAPI.lifecycles.onPause(() => {
   RundotGameAPI.analytics.recordCustomEvent('game_paused');
