@@ -18,16 +18,18 @@ const render = (node: ReactNode) => {
 };
 
 applyTheme(theme);
-applyDeviceClass();
+let cleanupDeviceClass = applyDeviceClass();
 
 // SDK auto-initializes on import but completion is async. getDevice()
 // throws pre-init, so the sync applyTheme above silently falls back to
 // fontScale=1 and the viewport-based deviceClass heuristic. Re-apply
 // once init resolves to pick up the real fontScale and deviceType.
+// Tear down the boot-time listeners before re-registering to avoid leaks.
 RundotGameAPI.initializeAsync()
   .then(() => {
     applyTheme(theme);
-    applyDeviceClass();
+    cleanupDeviceClass();
+    cleanupDeviceClass = applyDeviceClass();
   })
   .catch(() => {
     // Init failed; boot-time fallback values stand.
