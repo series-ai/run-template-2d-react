@@ -1,4 +1,63 @@
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api';
 import type { Theme } from './types';
+import type { DeviceClass } from './deviceClass';
+
+const SEMANTIC_VARS_STYLE_ID = 'rundot-semantic-text-vars';
+
+const kebab = (role: string): string => role.replace(/([A-Z])/g, '-$1').toLowerCase();
+
+interface RoleValues {
+  readonly size: string;
+  readonly lineHeight: string;
+  readonly weight: number;
+}
+
+// The Rundot host caps the iframe and disables browser pinch-zoom + OS font
+// scale via `user-scalable=no` in index.html, so the SDK surfaces user-set
+// font scaling as `device.fontScale` instead. Apply it at the emit point so
+// every semantic role honors it uniformly.
+const getFontScale = (): number => {
+  try {
+    const fs = RundotGameAPI.system.getDevice().fontScale;
+    return typeof fs === 'number' && fs > 0 ? fs : 1;
+  } catch {
+    return 1;
+  }
+};
+
+// px-only by design: theme.text sizes are all `${n}px` strings, and
+// Math.round below would corrupt fractional rem/em (1.5rem * 1.2 → 2rem).
+const scaleSize = (size: string, fontScale: number): string => {
+  if (fontScale === 1) return size;
+  const match = /^(-?\d+(?:\.\d+)?)px$/.exec(size.trim());
+  if (!match) return size;
+  const value = parseFloat(match[1] ?? '0');
+  return `${Math.round(value * fontScale)}px`;
+};
+
+const semanticVarsBlock = (
+  roles: Readonly<Record<string, RoleValues>>,
+  fontScale: number,
+): string => {
+  return Object.entries(roles)
+    .map(([role, values]) => {
+      const k = kebab(role);
+      const size = scaleSize(values.size, fontScale);
+      return `    --text-${k}: ${size};\n    --text-${k}-lh: ${values.lineHeight};\n    --text-${k}-weight: ${values.weight};`;
+    })
+    .join('\n');
+};
+
+const buildSemanticStylesheet = (text: Theme['text']): string => {
+  const fontScale = getFontScale();
+  const classes: DeviceClass[] = ['mobile', 'desktop', 'tv'];
+  return classes
+    .map((cls) => {
+      const selector = cls === 'mobile' ? ':root' : `:root[data-device="${cls}"]`;
+      return `${selector} {\n${semanticVarsBlock(text[cls], fontScale)}\n  }`;
+    })
+    .join('\n');
+};
 
 /**
  * Apply theme values to CSS variables
@@ -50,4 +109,15 @@ export const applyTheme = (theme: Theme): void => {
   root.style.setProperty('--animation-fast', `${theme.animation.fast}ms`);
   root.style.setProperty('--animation-normal', `${theme.animation.normal}ms`);
   root.style.setProperty('--animation-slow', `${theme.animation.slow}ms`);
+
+  // Apply semantic text variables (mobile/desktop/tv) via an injected style tag
+  // so the device-class overrides come from a single source of truth.
+  const css = buildSemanticStylesheet(theme.text);
+  let styleTag = document.getElementById(SEMANTIC_VARS_STYLE_ID) as HTMLStyleElement | null;
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = SEMANTIC_VARS_STYLE_ID;
+    document.head.appendChild(styleTag);
+  }
+  styleTag.textContent = css;
 };

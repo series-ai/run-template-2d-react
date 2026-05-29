@@ -30,7 +30,9 @@ export const SettingsTab: React.FC = () => {
   if (!device || !environment) {
     return (
       <Card title="Loading...">
-        <p style={{ fontSize: '13px', textAlign: 'center' }}>Loading device info...</p>
+        <p className="text-body-sm" style={{ textAlign: 'center' }}>
+          Loading device info...
+        </p>
       </Card>
     );
   }

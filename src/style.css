@@ -65,6 +65,44 @@ body {
   --font-semibold: 600;
   --font-bold: 700;
 
+  /* Semantic text fallbacks — mobile values from theme/default.ts.
+     The injected stylesheet from applyTheme overrides these and adds
+     desktop/tv overrides; these fallbacks keep type sized correctly if
+     applyTheme is delayed or fails (tests, pre-init, SDK race). */
+  --text-display: 56px;
+  --text-display-lh: 1.1;
+  --text-display-weight: 700;
+  --text-display-sm: 40px;
+  --text-display-sm-lh: 1.15;
+  --text-display-sm-weight: 700;
+  --text-h1: 28px;
+  --text-h1-lh: 1.2;
+  --text-h1-weight: 600;
+  --text-h2: 22px;
+  --text-h2-lh: 1.25;
+  --text-h2-weight: 600;
+  --text-h3: 18px;
+  --text-h3-lh: 1.3;
+  --text-h3-weight: 600;
+  --text-body-lg: 17px;
+  --text-body-lg-lh: 1.5;
+  --text-body-lg-weight: 400;
+  --text-body: 15px;
+  --text-body-lh: 1.5;
+  --text-body-weight: 400;
+  --text-body-sm: 13px;
+  --text-body-sm-lh: 1.5;
+  --text-body-sm-weight: 400;
+  --text-label: 14px;
+  --text-label-lh: 1.2;
+  --text-label-weight: 500;
+  --text-caption: 12px;
+  --text-caption-lh: 1.4;
+  --text-caption-weight: 400;
+  --text-numeric: 32px;
+  --text-numeric-lh: 1.1;
+  --text-numeric-weight: 600;
+
   --animation-fast: 150ms;
   --animation-normal: 200ms;
   --animation-slow: 300ms;
@@ -169,6 +207,102 @@ body {
   }
 }
 
+/* Semantic typography — native element defaults */
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+}
+
+p {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+}
+
+/* Semantic typography — utility classes */
+.text-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+  font-weight: var(--text-display-weight);
+}
+
+.text-display-sm {
+  font-size: var(--text-display-sm);
+  line-height: var(--text-display-sm-lh);
+  font-weight: var(--text-display-sm-weight);
+}
+
+.text-h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+}
+
+.text-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+}
+
+.text-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+}
+
+.text-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: var(--text-body-lg-lh);
+  font-weight: var(--text-body-lg-weight);
+}
+
+.text-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+}
+
+.text-body-sm {
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm-lh);
+  font-weight: var(--text-body-sm-weight);
+}
+
+.text-label {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--text-label-weight);
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--text-caption-weight);
+}
+
+.text-numeric {
+  font-size: var(--text-numeric);
+  line-height: var(--text-numeric-lh);
+  font-weight: var(--text-numeric-weight);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
+}
+
 /* Cards */
 .card {
   background: rgba(255, 255, 255, 0.05);
@@ -179,13 +313,13 @@ body {
 }
 
 .card h2 {
-  font-size: var(--font-lg);
+  font-size: var(--text-h2);
   margin-bottom: var(--spacing-sm);
   color: var(--color-primary);
 }
 
 .card p {
-  font-size: var(--font-sm);
+  font-size: var(--text-body-sm);
   line-height: 1.6;
   color: var(--color-text-muted);
   margin-bottom: var(--spacing-sm);
@@ -195,7 +329,7 @@ body {
 button {
   border: none;
   border-radius: var(--radius-sm);
-  font-size: var(--font-md);
+  font-size: var(--text-label);
   font-weight: var(--font-semibold);
   padding: 12px 24px;
   cursor: pointer;
@@ -231,13 +365,18 @@ button:disabled {
 .btn-large {
   width: 100%;
   padding: 16px;
-  font-size: var(--font-lg);
+  font-size: var(--text-h3);
 }
 
 /* Counter display */
 .counter-display {
-  font-size: var(--font-xxl);
-  font-weight: var(--font-bold);
+  font-size: var(--text-numeric);
+  line-height: var(--text-numeric-lh);
+  font-weight: var(--text-numeric-weight);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
   text-align: center;
   margin: var(--spacing-lg) 0;
   color: var(--color-primary);
@@ -252,12 +391,12 @@ button:disabled {
 }
 
 .info-label {
-  font-size: var(--font-sm);
+  font-size: var(--text-caption);
   color: var(--color-text-muted);
 }
 
 .info-value {
-  font-size: var(--font-sm);
+  font-size: var(--text-body-sm);
   font-weight: var(--font-medium);
 }
 
@@ -300,7 +439,7 @@ button:disabled {
 }
 
 .tab-label {
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: var(--font-medium);
 }
 
@@ -323,12 +462,12 @@ button:disabled {
 }
 
 .error-title {
-  font-size: var(--font-xl);
+  font-size: var(--text-h1);
   margin-bottom: var(--spacing-xs);
 }
 
 .error-message {
-  font-size: var(--font-md);
+  font-size: var(--text-body);
   color: var(--color-text-muted);
   margin-bottom: var(--spacing-md);
   max-width: 420px;
